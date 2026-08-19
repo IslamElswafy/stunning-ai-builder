@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/*
+ * One committed dark theme. The palette is deliberately small: a single
+ * accent, two surface levels and two text weights, so every screen stays
+ * consistent without a design system.
+ */
+@theme {
+  --color-canvas: #08090b;
+  --color-surface: #0f1014;
+  --color-elevated: #16171d;
+  --color-line: #232430;
+  --color-line-strong: #363847;
+  --color-ink: #edeef2;
+  --color-muted: #9a9ba8;
+  --color-accent: #6e62ff;
+  --color-accent-bright: #8d84ff;
+  --color-accent-soft: #16152e;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+/* A single soft light source behind the hero. Fixed so it never scrolls
+   into the result panel and competes with the text. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20% 0 auto 0;
+  height: 60vh;
+  background: radial-gradient(
+    60% 60% at 50% 0%,
+    rgba(110, 98, 255, 0.16),
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-bright);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
