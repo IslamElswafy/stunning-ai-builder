@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { GeneratingMark } from "@/components/generating-mark";
 import { Markdown } from "@/components/markdown";
 import type { TextDirection } from "@/lib/text-direction";
 
@@ -98,12 +99,7 @@ function headerLabel(status: GenerationStatus): string {
 
 function StatusDot({ status }: { status: GenerationStatus }) {
   if (status === "streaming") {
-    return (
-      <span aria-hidden="true" className="status-live">
-        <span className="status-live-ring" />
-        <span className="status-live-core" />
-      </span>
-    );
+    return <GeneratingMark tone="accent" />;
   }
 
   const color =

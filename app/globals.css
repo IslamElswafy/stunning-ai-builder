@@ -76,44 +76,24 @@ body::before {
   }
 }
 
-@keyframes spinner-rotate {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes spinner-dash {
-  0% {
-    stroke-dashoffset: 36;
-  }
-  50% {
-    stroke-dashoffset: 8;
-  }
-  100% {
-    stroke-dashoffset: 36;
-  }
-}
-
-@keyframes status-breathe {
+@keyframes gen-eq {
   0%,
   100% {
-    transform: scale(0.86);
-    opacity: 0.55;
+    transform: scaleY(0.32);
+    opacity: 0.35;
   }
   50% {
-    transform: scale(1);
+    transform: scaleY(1);
     opacity: 1;
   }
 }
 
-@keyframes status-ping {
+@keyframes gen-sweep {
   0% {
-    transform: scale(1);
-    opacity: 0.45;
+    background-position: 120% 0;
   }
   100% {
-    transform: scale(2.6);
-    opacity: 0;
+    background-position: -20% 0;
   }
 }
 
@@ -143,40 +123,57 @@ body::before {
   animation: caret-blink 1.15s ease-in-out infinite;
 }
 
-.gen-spinner {
-  animation: spinner-rotate 1.7s linear infinite;
-}
-
-.gen-spinner-arc {
-  stroke-dasharray: 32 48;
-  animation: spinner-dash 2s ease-in-out infinite;
-  transform-origin: center;
-}
-
-.status-live {
-  position: relative;
+.gen-eq {
   display: inline-flex;
-  height: 0.5rem;
-  width: 0.5rem;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
+  height: 0.75rem;
+  align-items: flex-end;
+  gap: 0.2rem;
 }
 
-.status-live-core {
-  height: 0.5rem;
-  width: 0.5rem;
-  border-radius: 999px;
+.gen-eq > span {
+  display: block;
+  width: 0.18rem;
+  height: 100%;
+  border-radius: 99px;
+  transform-origin: center bottom;
+  animation: gen-eq 1.55s ease-in-out infinite;
+}
+
+.gen-eq > span:nth-child(2) {
+  animation-delay: 0.22s;
+}
+
+.gen-eq > span:nth-child(3) {
+  animation-delay: 0.44s;
+}
+
+.gen-eq-on-accent > span {
+  background-color: white;
+}
+
+.gen-eq-accent > span {
   background-color: var(--color-accent-bright);
-  animation: status-breathe 2.4s ease-in-out infinite;
 }
 
-.status-live-ring {
+.gen-btn-busy {
+  position: relative;
+  overflow: hidden;
+  opacity: 1;
+}
+
+.gen-btn-busy::after {
+  content: "";
   position: absolute;
   inset: 0;
-  border-radius: 999px;
-  background-color: var(--color-accent-bright);
-  animation: status-ping 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.18) 50%,
+    transparent 62%
+  );
+  background-size: 220% 100%;
+  animation: gen-sweep 2.4s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .result-fade {

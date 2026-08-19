@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 
+import { GeneratingMark } from "@/components/generating-mark";
 import { IntegrationPicker } from "@/components/integration-picker";
 import {
   ResultPanel,
@@ -220,10 +221,16 @@ export function BuilderComposer() {
           <button
             type="submit"
             disabled={isStreaming}
-            className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-bright disabled:cursor-not-allowed disabled:opacity-60"
+            className={`relative inline-flex items-center gap-2.5 rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors ${
+              isStreaming
+                ? "gen-btn-busy cursor-not-allowed"
+                : "hover:bg-accent-bright"
+            }`}
           >
-            {isStreaming && <Spinner />}
-            {isStreaming ? "Generating…" : "Generate build plan"}
+            <span className="relative z-10 inline-flex items-center gap-2.5">
+              {isStreaming && <GeneratingMark tone="on-accent" />}
+              {isStreaming ? "Generating" : "Generate build plan"}
+            </span>
           </button>
 
           {isStreaming && (
@@ -268,32 +275,3 @@ async function readErrorMessage(response: Response): Promise<string> {
   return `The server responded with ${response.status}. Try again.`;
 }
 
-function Spinner() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      aria-hidden="true"
-      className="gen-spinner h-4 w-4"
-    >
-      <circle
-        cx="10"
-        cy="10"
-        r="7"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeOpacity="0.22"
-      />
-      <circle
-        className="gen-spinner-arc"
-        cx="10"
-        cy="10"
-        r="7"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
