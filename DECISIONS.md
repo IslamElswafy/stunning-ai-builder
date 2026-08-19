@@ -20,6 +20,8 @@ The framing for this build: *this feature ships to production tomorrow and I hav
 
 **Responsive by construction.** One column on mobile, two at `sm`, three at `lg` for the integration grid; the composer and result panel are fluid within a `max-w-3xl` column.
 
+**Arabic-aware behaviour without a localization layer.** The model answers in the prompt's language, and Arabic input and output render RTL — one system-prompt section, one 8-line direction helper, `dir="auto"` on the textarea, and `dir` on the generated content. No translation files, no locale routes, no language switcher, no new dependency. The English chrome is untouched and the app shell never flips; only the model's own output changes direction. The direction is captured from the prompt that was *submitted*, so an Arabic plan stays RTL while the user types their next prompt in English. Detection is a letter-share check rather than a single-character test, because Arabic prose routinely names Stripe and Google Sheets and would otherwise be read as English. This is the smallest thing that makes an Arabic-speaking user feel the product was built for them; full i18n is a different project and would have been scope creep here.
+
 ## What did you intentionally leave out?
 
 **Authentication and user accounts.** Nothing here is per-user. Adding auth would add a session store, a login screen, and a protected-route pattern without changing whether the core flow works. It is the first thing I would add in production — but as a deliberate next step, not as scaffolding shipped ahead of the need. See the risk section.

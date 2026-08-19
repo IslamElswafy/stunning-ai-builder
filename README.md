@@ -4,6 +4,8 @@ A single-screen AI product that turns a rough idea into a practical build plan. 
 
 The integrations are context only — nothing is connected and no OAuth runs. What they do is change the **system prompt** the server sends to the model, so the same idea produces a visibly different plan depending on what you select.
 
+Prompts are answered in the language they were written in. An Arabic prompt gets an Arabic plan, and both the input and the generated output render right-to-left automatically — no toggle, no locale routes.
+
 ## Tech stack
 
 | Layer | Choice |

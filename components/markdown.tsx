@@ -132,6 +132,7 @@ function renderInline(text: string): ReactNode[] {
       nodes.push(
         <code
           key={key++}
+          dir="ltr"
           className="rounded bg-elevated px-1.5 py-0.5 font-mono text-[0.85em] text-accent-bright"
         >
           {match[2]}
@@ -173,20 +174,23 @@ function renderBlock(block: Block): ReactNode {
 
     case "list": {
       const items = block.items.map((item, index) => (
-        <li key={index} className="pl-1.5 marker:text-line-strong">
+        <li key={index} className="ps-1.5 marker:text-line-strong">
           {renderInline(item)}
         </li>
       ));
       return block.ordered ? (
-        <ol className="my-3 list-decimal space-y-1.5 pl-5">{items}</ol>
+        <ol className="my-3 list-decimal space-y-1.5 ps-5">{items}</ol>
       ) : (
-        <ul className="my-3 list-disc space-y-1.5 pl-5">{items}</ul>
+        <ul className="my-3 list-disc space-y-1.5 ps-5">{items}</ul>
       );
     }
 
     case "code":
       return (
-        <pre className="my-4 overflow-x-auto rounded-lg border border-line bg-canvas p-4">
+        <pre
+          dir="ltr"
+          className="my-4 overflow-x-auto rounded-lg border border-line bg-canvas p-4 text-left"
+        >
           <code className="font-mono text-xs text-ink">{block.code}</code>
         </pre>
       );

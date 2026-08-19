@@ -28,6 +28,14 @@ Do this live, don't narrate a static screen.
 5. Show the diff out loud: the plan now has sub-sections for email lifecycle and a reporting/ops spreadsheet that simply weren't there before, and the architecture section changed to accommodate them.
 6. Mention the line under the header — "Written with Stripe, Gmail, Google Sheets in the system prompt" — that's the app telling you exactly what shaped the answer.
 
+**Optional — Arabic, 15–25 seconds.** Only if you're on time. Paste this with **Stripe** and **Gmail** selected:
+
+```text
+عايز أبني منصة كورسات أونلاين فيها دفع وإرسال إيميل للطالب بعد الاشتراك
+```
+
+One line while it streams: *"Because Stunning is building for Arabic-speaking users in MENA, I added lightweight language-aware behaviour rather than a full localization system. If the prompt is Arabic, the model answers in Arabic and the plan renders RTL automatically — no toggle, no locale routes."* Point out that `Stripe` and `checkout.session.completed` stay Latin and left-to-right inside the Arabic text.
+
 If you have seconds spare: hit **Generate** with an empty box to show the validation, or **Stop** mid-stream to show cancellation. Skip both if you're behind.
 
 ### 2:00–3:15 — Architecture

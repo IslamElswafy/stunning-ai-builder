@@ -8,6 +8,7 @@ import {
   type GenerationStatus,
 } from "@/components/result-panel";
 import { getIntegration, type IntegrationId } from "@/lib/integrations";
+import { getTextDirection, type TextDirection } from "@/lib/text-direction";
 import { MAX_PROMPT_LENGTH, MIN_PROMPT_LENGTH } from "@/lib/validation";
 
 const EXAMPLE_IDEAS = [
@@ -26,6 +27,10 @@ export function BuilderComposer() {
   const [error, setError] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [appliedIntegrations, setAppliedIntegrations] = useState<string[]>([]);
+  // Direction of the prompt that produced the plan on screen — not of whatever
+  // is in the textarea now, so an Arabic result stays RTL while the user types
+  // the next prompt in English.
+  const [resultDirection, setResultDirection] = useState<TextDirection>("ltr");
 
   const abortRef = useRef<AbortController | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -76,6 +81,7 @@ export function BuilderComposer() {
     setAppliedIntegrations(
       integrationIds.map((id) => getIntegration(id).name),
     );
+    setResultDirection(getTextDirection(trimmed));
     setStatus("streaming");
     resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
@@ -138,6 +144,9 @@ export function BuilderComposer() {
           id="idea"
           ref={textareaRef}
           value={prompt}
+          // Native bidi handling: the browser flips to RTL as soon as the text
+          // is Arabic, and back for English. No state, no re-render.
+          dir="auto"
           maxLength={MAX_PROMPT_LENGTH}
           rows={5}
           disabled={isStreaming}
@@ -236,6 +245,7 @@ export function BuilderComposer() {
           content={content}
           error={error}
           appliedIntegrations={appliedIntegrations}
+          direction={resultDirection}
         />
       </div>
     </div>

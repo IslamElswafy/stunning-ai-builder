@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { Markdown } from "@/components/markdown";
+import type { TextDirection } from "@/lib/text-direction";
 
 export type GenerationStatus = "idle" | "streaming" | "done" | "error";
 
@@ -12,6 +13,8 @@ type Props = {
   error: string | null;
   /** Names of the integrations that shaped the plan currently on screen. */
   appliedIntegrations: string[];
+  /** Reading direction of the prompt that produced the plan on screen. */
+  direction: TextDirection;
 };
 
 export function ResultPanel({
@@ -19,6 +22,7 @@ export function ResultPanel({
   content,
   error,
   appliedIntegrations,
+  direction,
 }: Props) {
   const isStreaming = status === "streaming";
   const hasContent = content.length > 0;
@@ -56,13 +60,17 @@ export function ResultPanel({
                 in the system prompt.
               </p>
             )}
-            <Markdown content={content} />
-            {isStreaming && (
-              <span
-                aria-hidden="true"
-                className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-accent-bright"
-              />
-            )}
+            {/* Only the model's own output flips direction — the panel
+                header and the integration line stay LTR app chrome. */}
+            <div dir={direction}>
+              <Markdown content={content} />
+              {isStreaming && (
+                <span
+                  aria-hidden="true"
+                  className="ms-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-accent-bright"
+                />
+              )}
+            </div>
           </>
         )}
 

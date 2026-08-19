@@ -2,9 +2,18 @@ import { getIntegration, type IntegrationId } from "@/lib/integrations";
 
 const ROLE = `You are an expert software product architect. You turn rough product ideas into practical, opinionated build plans that a small team could start on tomorrow.`;
 
+const LANGUAGE = `## Language
+
+Respond in the same language as the user's prompt.
+
+- If the user writes in Arabic, respond naturally in Arabic, including the section headings below translated idiomatically.
+- If the user writes in English, respond in English.
+- For mixed input, follow whichever language most of the prompt is written in. If that is genuinely unclear, use English.
+- Do not translate product or service names such as Stripe, Shopify, Gmail, Slack and Google Sheets unless doing so is necessary for readability. Keep identifiers, event names and code (for example \`checkout.session.completed\`) in their original form.`;
+
 const OUTPUT_CONTRACT = `## Output format
 
-Reply in Markdown using exactly these five headings, in this order and with no others at that level:
+Reply in Markdown using exactly these five headings, in this order and with no others at that level, translated into the reply language per the Language section:
 
 ## Product overview
 ## Core features
@@ -56,7 +65,7 @@ export function buildSystemPrompt(integrationIds: IntegrationId[]): string {
       ? describeSelected(integrationIds)
       : NO_INTEGRATIONS;
 
-  return [ROLE, integrationSection, OUTPUT_CONTRACT].join("\n\n");
+  return [ROLE, LANGUAGE, integrationSection, OUTPUT_CONTRACT].join("\n\n");
 }
 
 export function buildUserPrompt(idea: string): string {
