@@ -15,6 +15,8 @@ type Props = {
   appliedIntegrations: string[];
   /** Reading direction of the prompt that produced the plan on screen. */
   direction: TextDirection;
+  /** True while we are waiting for the first revealed characters. */
+  showThinking?: boolean;
 };
 
 export function ResultPanel({
@@ -23,6 +25,7 @@ export function ResultPanel({
   error,
   appliedIntegrations,
   direction,
+  showThinking = false,
 }: Props) {
   const isStreaming = status === "streaming";
   const hasContent = content.length > 0;
@@ -62,19 +65,19 @@ export function ResultPanel({
             )}
             {/* Only the model's own output flips direction — the panel
                 header and the integration line stay LTR app chrome. */}
-            <div dir={direction}>
+            <div dir={direction} className="result-fade">
               <Markdown content={content} />
               {isStreaming && (
                 <span
                   aria-hidden="true"
-                  className="ms-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-accent-bright"
+                  className="caret-blink ms-0.5 inline-block h-4 w-[2px] translate-y-0.5 rounded-full bg-accent-bright"
                 />
               )}
             </div>
           </>
         )}
 
-        {isStreaming && !hasContent && <ThinkingState />}
+        {(showThinking || (isStreaming && !hasContent)) && <ThinkingState />}
       </div>
     </section>
   );
@@ -94,14 +97,21 @@ function headerLabel(status: GenerationStatus): string {
 }
 
 function StatusDot({ status }: { status: GenerationStatus }) {
+  if (status === "streaming") {
+    return (
+      <span aria-hidden="true" className="status-live">
+        <span className="status-live-ring" />
+        <span className="status-live-core" />
+      </span>
+    );
+  }
+
   const color =
     status === "error"
       ? "bg-red-400"
       : status === "done"
         ? "bg-emerald-400"
-        : status === "streaming"
-          ? "bg-accent-bright animate-pulse"
-          : "bg-line-strong";
+        : "bg-line-strong";
 
   return (
     <span aria-hidden="true" className={`h-2 w-2 rounded-full ${color}`} />
@@ -121,13 +131,25 @@ function EmptyState() {
 }
 
 function ThinkingState() {
+  const rows = [
+    "w-1/3",
+    "w-full",
+    "w-11/12",
+    "w-4/5",
+    "w-full",
+    "w-2/3",
+    "w-5/6",
+  ];
+
   return (
-    <div className="space-y-3 py-2" aria-hidden="true">
-      {["w-2/5", "w-full", "w-11/12", "w-3/4"].map((width, index) => (
+    <div className="space-y-3.5 py-3" aria-hidden="true">
+      {rows.map((width, index) => (
         <div
           key={index}
-          className={`h-3 animate-pulse rounded bg-elevated ${width}`}
-          style={{ animationDelay: `${index * 120}ms` }}
+          className={`skeleton-bar rounded-md ${width} ${
+            index === 0 ? "mb-5 h-4" : "h-3"
+          }`}
+          style={{ animationDelay: `${index * 180}ms` }}
         />
       ))}
     </div>

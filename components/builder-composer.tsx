@@ -9,6 +9,7 @@ import {
 } from "@/components/result-panel";
 import { getIntegration, type IntegrationId } from "@/lib/integrations";
 import { getTextDirection, type TextDirection } from "@/lib/text-direction";
+import { useSmoothReveal } from "@/lib/use-smooth-reveal";
 import { MAX_PROMPT_LENGTH, MIN_PROMPT_LENGTH } from "@/lib/validation";
 
 const EXAMPLE_IDEAS = [
@@ -38,6 +39,10 @@ export function BuilderComposer() {
   const validationId = useId();
 
   const isStreaming = status === "streaming";
+  const { revealed, showThinking, panelStatus } = useSmoothReveal(
+    content,
+    status,
+  );
 
   // Never leave a request running after the component goes away.
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -241,11 +246,12 @@ export function BuilderComposer() {
 
       <div ref={resultRef} className="scroll-mt-6">
         <ResultPanel
-          status={status}
-          content={content}
+          status={panelStatus}
+          content={revealed}
           error={error}
           appliedIntegrations={appliedIntegrations}
           direction={resultDirection}
+          showThinking={showThinking}
         />
       </div>
     </div>
@@ -265,21 +271,24 @@ async function readErrorMessage(response: Response): Promise<string> {
 function Spinner() {
   return (
     <svg
-      viewBox="0 0 16 16"
+      viewBox="0 0 20 20"
       aria-hidden="true"
-      className="h-3.5 w-3.5 animate-spin"
+      className="gen-spinner h-4 w-4"
     >
       <circle
-        cx="8"
-        cy="8"
-        r="6"
+        cx="10"
+        cy="10"
+        r="7"
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeOpacity="0.3"
+        strokeOpacity="0.22"
       />
-      <path
-        d="M14 8a6 6 0 0 0-6-6"
+      <circle
+        className="gen-spinner-arc"
+        cx="10"
+        cy="10"
+        r="7"
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
